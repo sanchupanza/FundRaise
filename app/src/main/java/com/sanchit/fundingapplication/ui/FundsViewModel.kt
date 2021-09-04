@@ -6,7 +6,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.lifecycle.*
-import com.sanchit.fundingapplication.FundingApplication
+import com.sanchit.fundingapplication.application.FundingApplication
 import com.sanchit.fundingapplication.models.FundResponse
 import com.sanchit.fundingapplication.repository.FundRepository
 import com.sanchit.fundingapplication.util.Resource

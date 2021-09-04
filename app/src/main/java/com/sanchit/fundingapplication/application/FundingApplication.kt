@@ -1,4 +1,4 @@
-package com.sanchit.fundingapplication
+package com.sanchit.fundingapplication.application
 
 import android.app.Application
 
