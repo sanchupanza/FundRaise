@@ -25,27 +25,12 @@ class FundsViewModel(
 
 
     init {
-            getFunds()
+            getSavedFunds()
         }
 
-    private fun getFunds(){
-
-        val fundsList = getSavedFunds().value
-
-        if(fundsList!=null){
-            if(fundsList.isNotEmpty()){
-                _funds.postValue(Resource.Success(fundsList))
-            }else{
-                viewModelScope.launch {
-                    getFundsFromApi()
-                }
-            }
-        }else{
-            viewModelScope.launch {
-                getFundsFromApi()
-            }
-        }
-    }
+     fun getFunds() = viewModelScope.launch {
+         getFundsFromApi()
+     }
 
      fun getSavedFunds() = fundsRepository.getSavedFunds()
 

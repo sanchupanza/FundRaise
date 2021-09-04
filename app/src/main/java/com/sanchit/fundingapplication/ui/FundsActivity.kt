@@ -64,6 +64,8 @@ class FundsActivity : AppCompatActivity() {
             records?.let {
                 if(records.isNotEmpty()){
                     setDataToRv(records)
+                }else{
+                    viewModel.getFunds()
                 }
             }
         })
