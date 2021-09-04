@@ -47,7 +47,7 @@ class FundsViewModel(
         }
     }
 
-    private fun getSavedFunds() = fundsRepository.getSavedFunds()
+     fun getSavedFunds() = fundsRepository.getSavedFunds()
 
 
     private suspend fun getFundsFromApi() {

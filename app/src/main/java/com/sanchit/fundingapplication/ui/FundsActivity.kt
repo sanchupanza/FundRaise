@@ -35,6 +35,9 @@ class FundsActivity : AppCompatActivity() {
         binding.rvFunding.layoutManager = LinearLayoutManager(this)
         binding.rvFunding.setHasFixedSize(true)
 
+
+
+
         viewModel.funds.observe(this, Observer { response ->
             when (response) {
                 is Resource.Success -> {
@@ -53,6 +56,14 @@ class FundsActivity : AppCompatActivity() {
                 }
                 is Resource.Loading -> {
                     showProgressBar()
+                }
+            }
+        })
+
+        viewModel.getSavedFunds().observe(this, Observer { records->
+            records?.let {
+                if(records.isNotEmpty()){
+                    setDataToRv(records)
                 }
             }
         })
