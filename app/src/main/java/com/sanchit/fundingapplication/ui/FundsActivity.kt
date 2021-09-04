@@ -12,7 +12,6 @@ import com.sanchit.fundingapplication.databinding.ActivityFundsBinding
 import com.sanchit.fundingapplication.db.FundDatabase
 import com.sanchit.fundingapplication.models.Record
 import com.sanchit.fundingapplication.repository.FundRepository
-import com.sanchit.fundingapplication.util.Constants
 import com.sanchit.fundingapplication.util.Resource
 
 class FundsActivity : AppCompatActivity() {
@@ -20,37 +19,39 @@ class FundsActivity : AppCompatActivity() {
 
     lateinit var viewModel: FundsViewModel
 
-    private var _binding:ActivityFundsBinding? = null
+    private var _binding: ActivityFundsBinding? = null
     private val binding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityFundsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setTitle("Record List")
+        title = "Record List"
 
         val fundsRepository = FundRepository(FundDatabase(this))
-        val viewModelFactory = FundsViewModelProviderFactory(application,fundsRepository)
-        viewModel = ViewModelProvider(this,viewModelFactory).get(FundsViewModel::class.java)
+        val viewModelFactory = FundsViewModelProviderFactory(application, fundsRepository)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(FundsViewModel::class.java)
+
+
         binding.rvFunding.layoutManager = LinearLayoutManager(this)
         binding.rvFunding.setHasFixedSize(true)
 
-        viewModel.funds.observe(this, Observer {response->
-            when(response){
-                is Resource.Success->{
+        viewModel.funds.observe(this, Observer { response ->
+            when (response) {
+                is Resource.Success -> {
                     hideProgressBar()
-                    response.data?.let {fundResponse ->
-                        if(fundResponse.data.Records.isNotEmpty()){
-                            setDataToRv(fundResponse.data.Records)
+                    response.data?.let { data ->
+                        if (data.isNotEmpty()) {
+                            setDataToRv(data)
                         }
                     }
                 }
-                is Resource.Error->{
+                is Resource.Error -> {
                     hideProgressBar()
                     response.message?.let { message ->
                         Toast.makeText(this, "An error occured: $message", Toast.LENGTH_LONG).show()
                     }
                 }
-                is Resource.Loading->{
+                is Resource.Loading -> {
                     showProgressBar()
                 }
             }

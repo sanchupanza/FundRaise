@@ -8,6 +8,7 @@ import android.os.Build
 import androidx.lifecycle.*
 import com.sanchit.fundingapplication.application.FundingApplication
 import com.sanchit.fundingapplication.models.FundResponse
+import com.sanchit.fundingapplication.models.Record
 import com.sanchit.fundingapplication.repository.FundRepository
 import com.sanchit.fundingapplication.util.Resource
 import kotlinx.coroutines.launch
@@ -15,21 +16,39 @@ import okio.IOException
 import retrofit2.Response
 
 class FundsViewModel(
-    app: Application,
-    val fundsRepository: FundRepository
-    ) : AndroidViewModel(app) {
+        app: Application,
+        private val fundsRepository: FundRepository
+) : AndroidViewModel(app) {
 
-    private val _funds :  MutableLiveData<Resource<FundResponse>> = MutableLiveData()
-    internal val funds : LiveData<Resource<FundResponse>> get()  = _funds
+    private val _funds :  MutableLiveData<Resource<List<Record>>> = MutableLiveData()
+    internal val funds : LiveData<Resource<List<Record>>> get()  = _funds
 
 
     init {
             getFunds()
         }
 
-    private fun getFunds() = viewModelScope.launch {
-        getFundsFromApi()
+    private fun getFunds(){
+
+        val fundsList = getSavedFunds().value
+
+        if(fundsList!=null){
+            if(fundsList.isNotEmpty()){
+                _funds.postValue(Resource.Success(fundsList))
+            }else{
+                viewModelScope.launch {
+                    getFundsFromApi()
+                }
+            }
+        }else{
+            viewModelScope.launch {
+                getFundsFromApi()
+            }
+        }
     }
+
+    private fun getSavedFunds() = fundsRepository.getSavedFunds()
+
 
     private suspend fun getFundsFromApi() {
         _funds.postValue(Resource.Loading())
@@ -49,12 +68,14 @@ class FundsViewModel(
         }
     }
 
-    private fun handleResponse(response: Response<FundResponse>): Resource<FundResponse> {
+    private fun handleResponse(response: Response<FundResponse>): Resource<List<Record>> {
         if (response.isSuccessful){
 
             response.body().let {
-
-                return Resource.Success(response.body())
+                viewModelScope.launch {
+                    fundsRepository.insert(response.body()!!.data.Records)
+                }
+                return Resource.Success(response.body()!!.data.Records)
             }
         }
         return Resource.Error(response.message())

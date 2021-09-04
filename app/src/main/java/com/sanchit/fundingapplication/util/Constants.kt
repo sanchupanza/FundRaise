@@ -5,9 +5,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class Constants {
+
     companion object {
         const val BASE_URL = "https://testffc.nimapinfotech.com/"
 
+        fun Int.percent(goal:Int) = this*100/goal
 
         @SuppressLint("SimpleDateFormat")
         fun getDateDifference(sDate:String, eDate:String):String{
