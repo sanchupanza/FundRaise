@@ -42,11 +42,6 @@ class FundsActivity : AppCompatActivity() {
             when (response) {
                 is Resource.Success -> {
                     hideProgressBar()
-                    response.data?.let { data ->
-                        if (data.isNotEmpty()) {
-                            setDataToRv(data)
-                        }
-                    }
                 }
                 is Resource.Error -> {
                     hideProgressBar()
@@ -60,11 +55,11 @@ class FundsActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.getSavedFunds().observe(this, Observer { records->
+        viewModel.getSavedFunds().observe(this, Observer { records ->
             records?.let {
-                if(records.isNotEmpty()){
+                if (records.isNotEmpty()) {
                     setDataToRv(records)
-                }else{
+                } else {
                     viewModel.getFunds()
                 }
             }

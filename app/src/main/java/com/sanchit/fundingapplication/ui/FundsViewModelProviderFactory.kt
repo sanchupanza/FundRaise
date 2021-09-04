@@ -7,8 +7,8 @@ import com.sanchit.fundingapplication.db.FundDatabase
 import com.sanchit.fundingapplication.repository.FundRepository
 
 class FundsViewModelProviderFactory(
-        val app: Application,
-        val fundsRepository: FundRepository
+        private val app: Application,
+        private val fundsRepository: FundRepository
 ): ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return FundsViewModel(app,fundsRepository) as T

@@ -20,33 +20,33 @@ class FundsViewModel(
         private val fundsRepository: FundRepository
 ) : AndroidViewModel(app) {
 
-    private val _funds :  MutableLiveData<Resource<List<Record>>> = MutableLiveData()
-    internal val funds : LiveData<Resource<List<Record>>> get()  = _funds
+    private val _funds: MutableLiveData<Resource<List<Record>>> = MutableLiveData()
+    internal val funds: LiveData<Resource<List<Record>>> get() = _funds
 
 
     init {
-            getSavedFunds()
-        }
+        getSavedFunds()
+    }
 
-     fun getFunds() = viewModelScope.launch {
-         getFundsFromApi()
-     }
+    fun getFunds() = viewModelScope.launch {
+        getFundsFromApi()
+    }
 
-     fun getSavedFunds() = fundsRepository.getSavedFunds()
+    fun getSavedFunds() = fundsRepository.getSavedFunds()
 
 
     private suspend fun getFundsFromApi() {
         _funds.postValue(Resource.Loading())
         try {
-            if(hasInternetConnection()){
+            if (hasInternetConnection()) {
                 val response = fundsRepository.getFunds()
                 _funds.postValue(handleResponse(response))
 
-            }else{
+            } else {
                 _funds.postValue(Resource.Error("No Internet connection"))
             }
-        }catch (t:Throwable){
-            when(t){
+        } catch (t: Throwable) {
+            when (t) {
                 is IOException -> _funds.postValue(Resource.Error("Network Failure"))
                 else -> _funds.postValue(Resource.Error("Conversion Error"))
             }
@@ -54,7 +54,7 @@ class FundsViewModel(
     }
 
     private fun handleResponse(response: Response<FundResponse>): Resource<List<Record>> {
-        if (response.isSuccessful){
+        if (response.isSuccessful) {
 
             response.body().let {
                 viewModelScope.launch {
@@ -62,17 +62,21 @@ class FundsViewModel(
                 }
                 return Resource.Success(response.body()!!.data.Records)
             }
+
         }
         return Resource.Error(response.message())
     }
 
+
+
     private fun hasInternetConnection(): Boolean {
         val connectivityManager = getApplication<FundingApplication>().getSystemService(
-            Context.CONNECTIVITY_SERVICE
+                Context.CONNECTIVITY_SERVICE
         ) as ConnectivityManager
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val activeNetwork = connectivityManager.activeNetwork ?: return false
-            val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+            val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
+                    ?: return false
             return when {
                 capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
                 capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
@@ -81,7 +85,7 @@ class FundsViewModel(
             }
         } else {
             connectivityManager.activeNetworkInfo?.run {
-                return when(type) {
+                return when (type) {
                     ConnectivityManager.TYPE_WIFI -> true
                     ConnectivityManager.TYPE_MOBILE -> true
                     ConnectivityManager.TYPE_ETHERNET -> true
