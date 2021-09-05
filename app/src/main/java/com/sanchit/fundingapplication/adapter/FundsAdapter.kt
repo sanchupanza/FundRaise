@@ -6,14 +6,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.sanchit.fundingapplication.R
 import com.sanchit.fundingapplication.databinding.SingleItemLayoutBinding
 import com.sanchit.fundingapplication.models.Record
 import com.sanchit.fundingapplication.util.Constants
 import com.sanchit.fundingapplication.util.Constants.Companion.percent
-import com.squareup.picasso.Picasso
+import com.smarteist.autoimageslider.SliderAnimations
+import com.smarteist.autoimageslider.SliderView
+import java.util.*
 
 class FundsAdapter(private val records: List<Record>) :RecyclerView.Adapter<FundsAdapter.MyViewHolder>(){
     lateinit var context:Context
@@ -37,14 +37,26 @@ class FundsAdapter(private val records: List<Record>) :RecyclerView.Adapter<Fund
         holder.binding.tvDescription.text = current.shortDescription
         holder.binding.tvFunded.text = current.collectedValue.toString()
         holder.binding.tvGoals.text = current.totalValue.toString()
-        holder.binding.tvEndsIn.text = Constants.getDateDifference(current.startDate,current.endDate)
+        holder.binding.tvEndsIn.text = Constants.getDateDifference(
+            current.startDate,
+            current.endDate
+        )
         holder.binding.tvPercentage.text = current.collectedValue.percent(current.totalValue).toString()+"%"
 
-        Glide.with(context)
-            .load(current.mainImageURL)
-            .placeholder(R.drawable.ic_launcher_foreground)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .into(holder.binding.imageview)
+        val sliderDataArrayList = ArrayList<String>()
+        sliderDataArrayList.add(current.mainImageURL)
+        val adapter = SliderAdapter(sliderDataArrayList)
+        holder.binding.slider.autoCycleDirection = SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH
+        holder.binding.slider.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION)
+        holder.binding.slider.setSliderAdapter(adapter)
+        holder.binding.slider.scrollTimeInSec = 3
+        holder.binding.slider.isAutoCycle = true
+        holder.binding.slider.startAutoCycle()
+//        Glide.with(context)
+//            .load(current.mainImageURL)
+//            .placeholder(R.drawable.ic_launcher_foreground)
+//                .diskCacheStrategy(DiskCacheStrategy.ALL)
+//            .into(holder.binding.imageview)
     //    Picasso.get().load(current.mainImageURL).placeholder(R.drawable.ic_launcher_foreground).into(holder.binding.imageview)
 
 
