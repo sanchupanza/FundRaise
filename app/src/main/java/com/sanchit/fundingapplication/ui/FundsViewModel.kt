@@ -69,6 +69,7 @@ class FundsViewModel(
 
 
 
+    //Check Internet Connection
     private fun hasInternetConnection(): Boolean {
         val connectivityManager = getApplication<FundingApplication>().getSystemService(
                 Context.CONNECTIVITY_SERVICE

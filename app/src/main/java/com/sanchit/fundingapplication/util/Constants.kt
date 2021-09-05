@@ -9,8 +9,10 @@ class Constants {
     companion object {
         const val BASE_URL = "https://testffc.nimapinfotech.com/"
 
+        // get the Percentage
         fun Int.percent(goal:Int) = this*100/goal
 
+        //get the Date Difference
         @SuppressLint("SimpleDateFormat")
         fun getDateDifference(sDate:String, eDate:String):String{
             val dateFormat = SimpleDateFormat("dd/MM/yyyy")

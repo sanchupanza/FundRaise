@@ -43,21 +43,14 @@ class FundsAdapter(private val records: List<Record>) :RecyclerView.Adapter<Fund
         )
         holder.binding.tvPercentage.text = current.collectedValue.percent(current.totalValue).toString()+"%"
 
+        //Setting Image Slider
         val sliderDataArrayList = ArrayList<String>()
         sliderDataArrayList.add(current.mainImageURL)
         val adapter = SliderAdapter(sliderDataArrayList)
         holder.binding.slider.autoCycleDirection = SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH
         holder.binding.slider.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION)
         holder.binding.slider.setSliderAdapter(adapter)
-        holder.binding.slider.scrollTimeInSec = 3
-        holder.binding.slider.isAutoCycle = true
-        holder.binding.slider.startAutoCycle()
-//        Glide.with(context)
-//            .load(current.mainImageURL)
-//            .placeholder(R.drawable.ic_launcher_foreground)
-//                .diskCacheStrategy(DiskCacheStrategy.ALL)
-//            .into(holder.binding.imageview)
-    //    Picasso.get().load(current.mainImageURL).placeholder(R.drawable.ic_launcher_foreground).into(holder.binding.imageview)
+
 
 
     }

@@ -30,7 +30,7 @@ class SliderAdapter(private val images:List<String>):SliderViewAdapter<SliderAda
         val current = images[position]
         Glide.with(context)
             .load(current)
-            .placeholder(R.drawable.ic_launcher_foreground)
+            .placeholder(R.drawable.placeholder)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(holder.binding.imageview)
     }

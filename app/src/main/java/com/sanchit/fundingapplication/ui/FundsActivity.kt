@@ -19,12 +19,13 @@ class FundsActivity : AppCompatActivity() {
 
     lateinit var viewModel: FundsViewModel
 
-    private var _binding: ActivityFundsBinding? = null
-    private val binding get() = _binding!!
+     private lateinit var binding: ActivityFundsBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _binding = ActivityFundsBinding.inflate(layoutInflater)
+        binding = ActivityFundsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        //setting title to Appbar
         title = "Record List"
 
         val fundsRepository = FundRepository(FundDatabase(this))
@@ -55,18 +56,20 @@ class FundsActivity : AppCompatActivity() {
             }
         })
 
+        // getting offline funds
         viewModel.getSavedFunds().observe(this, Observer { records ->
             records?.let {
                 if (records.isNotEmpty()) {
-                    setDataToRv(records)
+                    setDataToRecyclerview(records)
                 } else {
+                    //get Funds from api
                     viewModel.getFunds()
                 }
             }
         })
     }
 
-    private fun setDataToRv(records: List<Record>) {
+    private fun setDataToRecyclerview(records: List<Record>) {
         binding.rvFunding.setItemViewCacheSize(records.size)
         binding.rvFunding.adapter = FundsAdapter(records)
 
@@ -80,11 +83,5 @@ class FundsActivity : AppCompatActivity() {
 
     private fun showProgressBar() {
         binding.progressBar.visibility = View.VISIBLE
-    }
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 }

@@ -3,7 +3,6 @@ package com.sanchit.fundingapplication.ui
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.sanchit.fundingapplication.db.FundDatabase
 import com.sanchit.fundingapplication.repository.FundRepository
 
 class FundsViewModelProviderFactory(
